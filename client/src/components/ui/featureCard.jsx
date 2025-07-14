@@ -10,7 +10,6 @@ function FeatureCard({ title, description, children, className }) {
         className
       )}
     >
-      <ShineBorder shineColor={["#C084FC", "#F472B6", "#FFBE7B"]} />
       <div className="aspect-video">{children}</div>
       <div>
         <h3 className="text-2xl font-medium mt-6">{title}</h3>

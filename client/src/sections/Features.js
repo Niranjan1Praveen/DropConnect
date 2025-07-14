@@ -5,6 +5,7 @@ import dashboard from "@/assets/images/dashboard-new.png";
 import { OrbitingCircles } from "@/components/magicui/orbiting-circles";
 import Key from "@/components/ui/key";
 import { ShineBorder } from "@/components/magicui/shine-border";
+import { AuroraText } from "@/components/magicui/aurora-text";
 const features = [
   "CSR Impact Dashboards",
   "Verified Internships",
@@ -25,8 +26,8 @@ export default function Features() {
         <div className="flex justify-center">
           <Tags title={"Platform Features"} />
         </div>
-        <h2 className="text-6xl font-medium text-center mt-6 max-w-3xl mx-auto">
-          Tech for <span className="text-lime-400">Social Impact</span>
+        <h2 className="text-5xl font-medium text-center mt-6 max-w-3xl mx-auto">
+          Tech for <span className="text-primary-400">Social Impact</span>
         </h2>
 
         {/* Feature Cards */}
@@ -61,9 +62,8 @@ export default function Features() {
             <div className="relative aspect-video flex items-center justify-center overflow-hidden">
               <p className="text-3xl font-bold text-white/20 text-center leading-relaxed z-10">
                 Impact shouldn’t go unnoticed. <br /> We
-                <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  {" "}
-                  reward{" "}
+                {" "}<span className="bg-gradient-to-r from-primary-500 via-[#30f6d5] to-[#5EF7BA] bg-clip-text">
+                  reward
                 </span>{" "}
                 it
               </p>
@@ -78,11 +78,6 @@ export default function Features() {
             }
             className="md:col-span-2 md:col-start-2 lg:col-span-1 lg:col-start-auto"
           >
-            {/* <div className="aspect-video flex items-center justify-center gap-4 flex-wrap">
-              <Key className={"w-28"}>Skill</Key>
-              <Key className={"w-28"}>Location</Key>
-              <Key className={"w-28"}>Interest</Key>
-            </div> */}
             <div className="aspect-video flex items-center justify-center relative w-full overflow-hidden min-h-[200px]">
               <OrbitingCircles radius={100}>
                 <Key className={"w-28 p-5 text-sm md:text-lg"}>Skill</Key>
@@ -100,7 +95,7 @@ export default function Features() {
               key={feature}
               className="bg-neutral-900 border-white/10 inline-flex gap-3 items-center px-3 md:px-5 py-1.5 md:py-2 rounded-2xl hover:scale-105 transition duration-500 group"
             >
-              <span className="bg-lime-400 text-neutral-950 size-5 rounded-full inline-flex items-center justify-center text-xl group-hover:rotate-45 transition duration-500">
+              <span className="bg-primary-400 text-neutral-950 size-5 rounded-full inline-flex items-center justify-center text-xl group-hover:rotate-45 transition duration-500">
                 &#10038;
               </span>
               <span className="font-medium md:text-lg">{feature}</span>

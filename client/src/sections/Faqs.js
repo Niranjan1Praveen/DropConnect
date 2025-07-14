@@ -20,7 +20,7 @@ export default function Faqs() {
         
         <h2 className="text-4xl font-bold">
           Questions? We&rsquo;ve got{" "}
-          <span className="text-lime-400">answers</span>
+          <span className="text-primary-400">answers</span>
         </h2>
       </div>
       <div className="mt-10 max-w-2xl mx-auto">

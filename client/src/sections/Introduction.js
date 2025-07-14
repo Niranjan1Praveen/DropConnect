@@ -52,7 +52,7 @@ export default function Introduction() {
                 );
               })}
             </span>
-            <span className="text-lime-400 block mt-3">
+            <span className="text-primary-400 block mt-3">
               That’s why we built DropConnect.
             </span>
           </div>

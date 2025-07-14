@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/images/logo.png";
+import { AuroraText } from "@/components/magicui/aurora-text";
 
 const footerLinks = [
   { href: "#", label: "Contact" },
@@ -15,9 +16,11 @@ export default function Footer() {
         <div className="flex flex-col gap-2 items-center text-center md:items-start">
           <div className="flex items-center">
             <Image src={logo} alt="Logo Icon" className="h-auto w-20" />
-            <h2 className="font-bold text-2xl md:inline-flex hidden text-lime-400">
-              DropConnect
-            </h2>
+            <p className="text-2xl font-bold text-white/20 md:inline-flex hidden">
+              <AuroraText colors={["#4ade80", "#30f6d5", "#5EF7BA", "#06b6d4"]}>
+                DropConnect
+              </AuroraText>
+            </p>
           </div>
           <small className="text-white/50">
             Built by{" "}
@@ -25,7 +28,12 @@ export default function Footer() {
               code4change
             </Link>
             . The source code is available on{" "}
-            <Link href={"https://github.com/Niranjan1Praveen/DropConnect-Development"} className="underline italic">
+            <Link
+              href={
+                "https://github.com/Niranjan1Praveen/DropConnect-Development"
+              }
+              className="underline italic"
+            >
               GitHub.
             </Link>
           </small>

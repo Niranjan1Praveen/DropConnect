@@ -6,6 +6,7 @@ import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs";
+import { AuroraText } from "@/components/magicui/aurora-text";
 const navLinks = [
   { label: "Home", href: "" },
   { label: "Features", href: "#features" },
@@ -18,15 +19,17 @@ export default function Navbar() {
     <>
       <section className="py-4 px-4 lg:py-8 flex items-center justify-center fixed w-full top-0 z-100">
         <div className="container max-w-5xl">
-          <div className="border border-white/15 rounded-[27px] md:rounded-full bg-neutral-950/70 backdrop-blur">
+          <div className="rounded-[27px] md:rounded-full bg-neutral-950/70 backdrop-blur">
             <div className="grid grid-cols-2 lg:grid-cols-3 p-2 items-center px-4 md:pr-2">
               <div className="flex items-center">
-                <Image
-                  src={logo}
-                  alt="Logo Icon"
-                  className="h-10 w-14"
-                />
-                <h2 className="font-semibold text-2xl md:inline-flex hidden text-lime-400">DropConnect</h2>
+                <Image src={logo} alt="Logo Icon" className="h-10 w-12" />
+                <p className="text-2xl font-bold text-white/20 md:inline-flex hidden">
+                  <AuroraText
+                    colors={["#4ade80", "#30f6d5", "#5EF7BA", "#06b6d4"]}
+                  >
+                    DropConnect
+                  </AuroraText>
+                </p>
               </div>
               <div className="lg:flex justify-center items-center hidden">
                 <nav className="flex gap-6 font-medium">
@@ -91,7 +94,7 @@ export default function Navbar() {
                   variant={"signup"}
                   className="cursor-pointer hidden md:inline-flex items-center"
                 >
-                  <a href="#signUpOptions">Sign Up</a>
+                  <a href="#signUpOptions">Register</a>
                 </Button>
               </div>
             </div>
@@ -121,7 +124,7 @@ export default function Navbar() {
                       variant={"signup"}
                       className="cursor-pointer md:inline-flex items-center"
                     >
-                      <a href="#signUpOptions">Sign Up</a>
+                      <a href="#signUpOptions">Register</a>
                     </Button>
                   </div>
                 </motion.div>

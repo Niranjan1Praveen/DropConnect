@@ -4,6 +4,7 @@ const signUpOptionsData = [
     color: "pink",
     title: "Volunteer",
     img: "/assets/images/volunteer.png",
+    catchPhrase: "changemakers",
     description:
       "Join our community of volunteers and help build resilient water infrastructure, raise awareness, and support climate-affected areas.",
     cta: "Join as Volunteer",
@@ -22,6 +23,7 @@ const signUpOptionsData = [
     color: "purple",
     title: "NGO / Organization",
     img: "/assets/images/ngo.png",
+    catchPhrase: "uplifters",
     description:
       "Collaborate with us on sustainable water projects, disaster risk reduction strategies, and community resilience programs.",
     cta: "Partner as NGO",
@@ -40,6 +42,7 @@ const signUpOptionsData = [
     color: "blue",
     title: "Corporates",
     img: "/assets/images/corporate.png",
+    catchPhrase: "visionaries",
     description:
       "Support impactful initiatives through your CSR programs. Fund projects that enhance water security and climate adaptation.",
     cta: "Join as Corporate",

@@ -155,7 +155,7 @@ async function Page({ searchParams }) {
       ) : (
         <main className="flex flex-col gap-10 p-8">
           <small className="text-muted-foreground flex gap-2 items-center">
-            <AlertCircle className="w-2 h-2" /> All organizations, events, and
+            <AlertCircle className="w-4 h-4" /> All organizations, events, and
             NGOs listed currently are for prototype and demonstration purposes
             only. The data is entirely fictional and used to illustrate platform
             functionality.

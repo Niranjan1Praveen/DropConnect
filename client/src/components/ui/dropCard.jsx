@@ -35,7 +35,7 @@ const DropCard = ({ item }) => {
   return (
     <Card className={"bg-transparent border-0"}>
       <div className="flex flex-col space-y-4 text-white p-4">
-        <h2 className="text-lime-400 text-3xl font-bold">{item.cta}</h2>
+        <h2 className="text-primary-400 text-3xl font-bold">{item.cta}/<span className="text-xl text-white">{item.catchPhrase}</span></h2>
         <img
           src={item?.img ?? ""}
           className="w-full h-[300px] rounded-md"
@@ -47,14 +47,14 @@ const DropCard = ({ item }) => {
           {item.description}
         </p>
         <RegisterLink postLoginRedirectURL={url}>
-          <Button className="cursor-pointer w-full">
+          <Button className="cursor-pointer w-full" variant={"outline"}>
             {text}
           </Button>
         </RegisterLink>
         <ul className="text-md text-white/80 mt-4 space-y-2">
           {item.features?.map((point, i) => (
             <li key={i} className="flex gap-2 text-[1.1rem]">
-              <span className="text-lime-400">✓</span> {point}
+              <span className="text-primary-400">✓</span> {point}
             </li>
           ))}
         </ul>

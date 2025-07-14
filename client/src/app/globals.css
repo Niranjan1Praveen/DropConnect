@@ -42,28 +42,80 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --animate-orbit: orbit calc(var(--duration)*1s) linear infinite;
-  @keyframes orbit {
-  0% {
-    transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
+  --color-primary-50: #ecfcfd;
+  --color-primary-75: #dafafa;
+  --color-primary-100: #c7f7f8;
+  --color-primary-150: #b4f5f5;
+  --color-primary-200: #a2f2f3;
+  --color-primary-250: #8feff1;
+  --color-primary-300: #7cedee;
+  --color-primary-350: #69eaec;
+  --color-primary-400: #57e8e9;
+  --color-primary-500: #44e5e7;
+  --color-primary-600: #3dced0;
+  --color-primary-700: #36b7b9;
+  --color-primary-800: #30a0a2;
+  --color-primary-900: #29898b;
+  --color-primary-1000: #227374;
+  --color-primary-1100: #1b5c5c;
+  --color-primary-1200: #144545;
+  --color-primary-1300: #0e2e2e;
+  --color-primary-1400: #071717;
+  --color-primary-1500: #061212;
+
+  --font-sans: "Poppins", sans-serif;
+
+  --color-primary-glow: rgba(68, 229, 231, 0.2);
+  --color-primary-50-glow: rgba(236, 252, 253, 0.2);
+  --animate-shiny-text: shiny-text 8s infinite;
+  @keyframes shiny-text {
+  0%, 90%, 100% {
+    background-position: calc(-100% - var(--shiny-width)) 0;
     }
-  100% {
-    transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg));
+  30%, 60% {
+    background-position: calc(100% + var(--shiny-width)) 0;
     }
   }
-  --animate-shine: shine var(--duration) infinite linear
+  --animate-gradient: gradient 8s linear infinite
 ;
-  @keyframes shine {
-  0% {
-    background-position: 0% 0%;}
-  50% {
-    background-position: 100% 100%;}
-  to {
-    background-position: 0% 0%;}}
-  --animate-gradient: gradient 8s linear infinite;
   @keyframes gradient {
   to {
     background-position: var(--bg-size, 300%) 0;}}
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  @keyframes marquee {
+  from {
+    transform: translateX(0);}
+  to {
+    transform: translateX(calc(-100% - var(--gap)));}}
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);}
+  to {
+    transform: translateY(calc(-100% - var(--gap)));}}
+  --animate-orbit: orbit calc(var(--duration)*1s) linear infinite;
+  @keyframes orbit {
+  0% {
+    transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));}
+  100% {
+    transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg));}}
+  --animate-aurora: aurora 8s ease-in-out infinite alternate;
+  @keyframes aurora {
+  0% {
+    background-position: 0% 50%;
+    transform: rotate(-5deg) scale(0.9);}
+  25% {
+    background-position: 50% 100%;
+    transform: rotate(5deg) scale(1.1);}
+  50% {
+    background-position: 100% 50%;
+    transform: rotate(-3deg) scale(0.95);}
+  75% {
+    background-position: 50% 0%;
+    transform: rotate(3deg) scale(1.05);}
+  100% {
+    background-position: 0% 50%;
+    transform: rotate(-5deg) scale(0.9);}}
   --animate-rainbow: rainbow var(--speed, 2s) infinite linear;
   --color-color-5: var(--color-5);
   --color-color-4: var(--color-4);
@@ -169,16 +221,26 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+  @layer base {
+    * {
+      @apply border-border outline-ring/50;
+    }
+    body {
+      @apply text-foreground bg-background bg-repeat;
+    }
   }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-html{
+/* Global Styles */
+html {
   scroll-behavior: smooth;
+}
+.transition-properties {
+  @apply transition-all duration-150;
+}
+.primary-glow {
+  @apply drop-shadow-[0_0px_25px_var(--color-primary-glow)];
+}
+.primary-glow-hover {
+  @apply hover:drop-shadow-[0_0px_25px_var(--color-primary-50-glow)];
 }
 /* Hero Animations */
 .fade-up {
@@ -193,6 +255,15 @@ html{
 .fade-out {
   opacity: 0;
   transform: translateY(20px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 .dark {
