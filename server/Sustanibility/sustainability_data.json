@@ -1,0 +1,97 @@
+{
+  "user_profile": {
+    "name": "Alex Johnson",
+    "sustainability_score": 74,
+    "target_score": 100,
+    "member_since": "2024-01-15",
+    "level": "Eco Enthusiast",
+    "green_base": 62
+  },
+  "carbon_footprint": {
+    "current_score": 58,
+    "monthly_target": 85,
+    "electricity_usage": {
+      "current_month": 206.0,
+      "previous_month": 206.0,
+      "unit": "kWh",
+      "co2_emissions": 168.92,
+      "billing_period": "March 2025"
+    },
+    "water_usage": {
+      "current_month": 34000,
+      "previous_month": 7000,
+      "unit": "Liters",
+      "co2_emissions": 102.0,
+      "billing_period": "June 2024"
+    },
+    "historical_data": [
+      {
+        "month": "Jan",
+        "score": 65
+      },
+      {
+        "month": "Feb",
+        "score": 68
+      },
+      {
+        "month": "Mar",
+        "score": 72
+      },
+      {
+        "month": "Apr",
+        "score": 75
+      },
+      {
+        "month": "May",
+        "score": 78
+      },
+      {
+        "month": "Jul",
+        "score": 58
+      }
+    ]
+  },
+  "sustainability_activities": [
+    {
+      "id": 1,
+      "type": "Tree Plantation",
+      "date": "2024-05-15",
+      "trees_planted": 12,
+      "co2_offset": 240,
+      "location": "Central Park",
+      "participants": 25
+    }
+  ],
+  "skills": [
+    {
+      "name": "Environmental Data Analysis",
+      "level": 85,
+      "acquired_date": "2024-03-15",
+      "source": "Tree Plantation Program"
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Veltrix Sustainability Certification",
+      "issued_date": "2024-04-15",
+      "validity": "2026-04-15",
+      "level": "Advanced"
+    }
+  ],
+  "opportunities": [
+    {
+      "id": 1,
+      "title": "Green Tech Internship",
+      "company": "EcoTech Solutions",
+      "type": "Internship",
+      "duration": "3 months",
+      "eligibility_score": 75,
+      "required_skills": [
+        "Environmental Data Analysis"
+      ],
+      "status": "eligible",
+      "application_deadline": "2024-07-30",
+      "description": "Work on renewable energy projects"
+    }
+  ]
+}
