@@ -1,6 +1,7 @@
 # DropConnect
 
-**A Smart Platform for Water Resilience Volunteering & CSR Impact**
+<!-- **A Smart Platform for Water Resilience Volunteering & CSR Impact** -->
+**A Smart Platform for Tracking Carbon Footprint & Driving CSR Impact**
 
 > *To build resilience, we need coordinated disaster risk reduction strategies, including strong water governance, early warning systems, and sustainable, climate-resilient infrastructure at all levels.*  
 > — *UN SDG Framework*
