@@ -1,7 +1,6 @@
 # DropConnect
 
-<!-- **A Smart Platform for Water Resilience Volunteering & CSR Impact** -->
-**A Smart Platform for Tracking Carbon Footprint & Driving CSR Impact**
+**A Smart Platform for Water Resilience Volunteering & CSR Impact** 
 
 > *To build resilience, we need coordinated disaster risk reduction strategies, including strong water governance, early warning systems, and sustainable, climate-resilient infrastructure at all levels.*  
 > — *UN SDG Framework*
@@ -90,7 +89,8 @@
 - **Debshata Choudhury** – Team Leader, Backend Developer  
 - **Niranjan Praveen** – Frontend Developer  
 - **Vaibhav Jain** – Frontend Developer  
-- **Abhishek Chaubey** – Backend Developer  
+- **Abhishek Chaubey** – Backend Developer
+- **Pratham Ranjan** - Backend Developer
 
 ---
 
