@@ -6,7 +6,7 @@
 > — *UN SDG Framework*
 
 ---
-
+![Sustainibility Dashboard Preview](designs/sustainibility.png)  
 ## Overview
 
 **DropConnect** is a digital platform that unites students, NGOs, and corporations to foster collective action for water resilience and climate-smart disaster management. Anchored in India’s Schedule VII CSR mandate, DropConnect empowers verified impact creation through:
