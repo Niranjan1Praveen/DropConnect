@@ -90,7 +90,6 @@
 - **Niranjan Praveen** – Frontend Developer  
 - **Vaibhav Jain** – Frontend Developer  
 - **Abhishek Chaubey** – Backend Developer  
-- **Pratham Ranjan** – Backend Developer  
 
 ---
 
