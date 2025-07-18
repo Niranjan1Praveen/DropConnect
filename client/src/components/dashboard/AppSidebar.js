@@ -11,6 +11,7 @@ import {
   MapIcon,
   Send,
   FormInput,
+  Footprints,
 } from "lucide-react";
 import {
   Sidebar,
@@ -88,6 +89,16 @@ const AppSidebar = () => {
                   <Link href={"/dashboard/volunteer/inbox"}>
                     <Inbox />
                     <span>Inbox</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href={"http://127.0.0.1:5000"}>
+                    <Footprints />
+                    <span>Carbon Footprint</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

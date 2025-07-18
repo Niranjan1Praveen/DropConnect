@@ -1,14 +1,14 @@
 {
   "user_profile": {
     "name": "Alex Johnson",
-    "sustainability_score": 74,
+    "sustainability_score": 100,
     "target_score": 100,
     "member_since": "2024-01-15",
-    "level": "Eco Enthusiast",
-    "green_base": 62
+    "level": "Eco Warrior",
+    "green_base": 89
   },
   "carbon_footprint": {
-    "current_score": 58,
+    "current_score": 78,
     "monthly_target": 85,
     "electricity_usage": {
       "current_month": 206.0,
@@ -18,10 +18,10 @@
       "billing_period": "March 2025"
     },
     "water_usage": {
-      "current_month": 34000,
-      "previous_month": 7000,
+      "current_month": 7000,
+      "previous_month": 34000,
       "unit": "Liters",
-      "co2_emissions": 102.0,
+      "co2_emissions": 21.0,
       "billing_period": "June 2024"
     },
     "historical_data": [
@@ -47,7 +47,7 @@
       },
       {
         "month": "Jul",
-        "score": 58
+        "score": 78
       }
     ]
   },

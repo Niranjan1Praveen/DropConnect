@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize Gemini
-GEMINI_API_KEY = "AIzaSyAkrtKclb9cd8FnFP9UuvXS6kmC6uW88CA"  # ← Replace with your actual key
+GEMINI_API_KEY = "AIzaSyCoSaL4b0IdwzQ6qRhQp64zLS8w-9tmOAw"  # ← Replace with your actual key
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
@@ -161,4 +161,4 @@ def analyze():
         return jsonify(generate_smart_fallback(lat, lon)), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5003)

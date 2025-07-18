@@ -264,7 +264,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\nithi\\Desktop\\DropConnect\\client\\src\\generated\\prisma",
+      "value": "/Users/vaibhavjain/Desktop/DropConnect/client/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -273,12 +273,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\nithi\\Desktop\\DropConnect\\client\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/vaibhavjain/Desktop/DropConnect/client/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -292,6 +292,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
