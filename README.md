@@ -1,3 +1,4 @@
+# Winners of Xylem Innovation Challenge International Hackathon
 # DropConnect
 
 **A Smart Platform for Water Resilience Volunteering & CSR Impact** 
@@ -6,6 +7,13 @@
 > — *UN SDG Framework*
 
 ---
+## 👥 Team Members
+- Debshata Choudhury (Team Leader)  
+- Abhishek Chaubhey  
+- Niranjan Praveen 
+- Vaibhav Jain
+- Pratham Ranjan  
+   
 ## Overview
 
 **DropConnect** is a digital platform that unites students, NGOs, and corporations to foster collective action for water resilience and climate-smart disaster management. Anchored in India’s Schedule VII CSR mandate, DropConnect empowers verified impact creation through:
