@@ -1,4 +1,3 @@
-# Winners of Xylem Innovation Challenge International Hackathon
 # DropConnect
 
 **A Smart Platform for Water Resilience Volunteering & CSR Impact** 
