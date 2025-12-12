@@ -67,6 +67,8 @@
 | Hosting          | Supabase Hosting                         |
 | Realtime & APIs  | Supabase Realtime, Edge Functions        |
 | Deployment       | GitHub Actions (CI/CD)                   |
+| ML Models        | XGBoost for Disaster Zone Classification |
+
 
 ---
 
@@ -92,7 +94,7 @@
 
 ## Team DropConnect
 
-- **Debshata Choudhury** – Team Leader, Backend Developer  
+- **Debshata Choudhury** – Team Leader, ML Engineer  
 - **Niranjan Praveen** – Frontend Developer  
 - **Vaibhav Jain** – Frontend Developer  
 - **Abhishek Chaubey** – Backend Developer
