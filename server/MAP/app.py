@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize Gemini
-GEMINI_API_KEY = "AIzaSyCoSaL4b0IdwzQ6qRhQp64zLS8w-9tmOAw"  # ← Replace with your actual key
+GEMINI_API_KEY = ""  
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
