@@ -1,0 +1,101 @@
+State,District,vegetation_index,water_index,elevation,urban_proximity,score,issues
+Tamil Nadu,Madurai,0.78,0.5,389,9.1,0.81,deforestation
+Kerala,Kochi,0.35,0.69,238,6.8,0.65,deforestation
+Telangana,Karimnagar,0.47,0.45,792,10.3,0.55,urban heat
+Rajasthan,Udaipur,0.4,0.49,554,3.0,0.63,urban heat
+Telangana,Hyderabad,0.71,0.57,768,8.9,0.74,deforestation
+Tamil Nadu,Madurai,0.45,0.38,200,22.1,0.84,water stress
+Bihar,Patna,0.41,0.29,384,30.7,0.55,flood risk
+Haryana,Panipat,0.43,0.22,618,5.4,0.6,deforestation
+Bihar,Bhagalpur,0.36,0.6,869,4.9,0.58,water stress
+Haryana,Faridabad,0.54,0.31,732,33.2,0.67,water stress
+Karnataka,Bengaluru,0.69,0.31,467,42.7,0.6,air pollution
+Bihar,Bhagalpur,0.69,0.23,984,15.1,0.59,urban heat
+Gujarat,Ahmedabad,0.6,0.23,1129,10.0,0.73,air pollution
+Andhra Pradesh,Vijayawada,0.49,0.45,1060,41.9,0.5,flood risk
+Bihar,Bhagalpur,0.64,0.59,751,42.9,0.84,flood risk
+Andhra Pradesh,Vijayawada,0.37,0.31,1187,8.2,0.68,deforestation
+Rajasthan,Udaipur,0.36,0.24,216,23.1,0.56,air pollution
+Gujarat,Surat,0.76,0.63,882,10.8,0.65,water stress
+Telangana,Karimnagar,0.64,0.64,76,10.7,0.52,deforestation
+Odisha,Bhubaneswar,0.56,0.44,401,27.3,0.5,water stress
+Uttar Pradesh,Varanasi,0.66,0.55,1066,28.2,0.6,air pollution
+Haryana,Panipat,0.56,0.48,512,25.2,0.73,deforestation
+Uttar Pradesh,Varanasi,0.58,0.42,1044,2.1,0.7,flood risk
+Uttar Pradesh,Kanpur,0.68,0.24,601,40.9,0.7,flood risk
+Haryana,Gurgaon,0.39,0.67,90,20.7,0.69,water stress
+Punjab,Jalandhar,0.3,0.66,661,10.8,0.54,flood risk
+Delhi,New Delhi,0.39,0.24,144,5.6,0.62,water stress
+Kerala,Kozhikode,0.54,0.47,711,19.1,0.8,urban heat
+Madhya Pradesh,Jabalpur,0.7,0.23,766,5.3,0.52,urban heat
+Odisha,Bhubaneswar,0.59,0.53,1109,31.9,0.69,deforestation
+Tamil Nadu,Chennai,0.3,0.33,976,28.9,0.68,air pollution
+Madhya Pradesh,Jabalpur,0.39,0.36,794,32.9,0.71,flood risk
+Kerala,Kozhikode,0.76,0.34,794,25.6,0.6,deforestation
+Bihar,Patna,0.42,0.42,180,6.6,0.64,urban heat
+Uttar Pradesh,Lucknow,0.59,0.36,209,25.3,0.71,urban heat
+Maharashtra,Nashik,0.57,0.21,342,28.7,0.47,urban heat
+Madhya Pradesh,Bhopal,0.49,0.27,558,3.5,0.81,deforestation
+West Bengal,Kolkata,0.47,0.54,533,37.1,0.71,flood risk
+Telangana,Warangal,0.75,0.21,1061,15.0,0.42,urban heat
+Andhra Pradesh,Visakhapatnam,0.68,0.34,496,16.9,0.83,air pollution
+Punjab,Jalandhar,0.39,0.34,585,35.1,0.61,water stress
+Bihar,Gaya,0.58,0.5,674,22.1,0.46,flood risk
+Andhra Pradesh,Tirupati,0.73,0.36,530,32.3,0.64,water stress
+Madhya Pradesh,Indore,0.76,0.25,652,41.8,0.45,urban heat
+Madhya Pradesh,Indore,0.67,0.33,516,37.9,0.84,urban heat
+Rajasthan,Jaipur,0.58,0.64,1065,5.0,0.83,air pollution
+West Bengal,Durgapur,0.6,0.37,679,12.7,0.42,urban heat
+Gujarat,Vadodara,0.67,0.64,387,7.6,0.63,flood risk
+Gujarat,Vadodara,0.79,0.21,648,28.2,0.7,air pollution
+Haryana,Gurgaon,0.41,0.55,535,2.4,0.51,air pollution
+Telangana,Karimnagar,0.65,0.3,884,30.3,0.58,flood risk
+Gujarat,Vadodara,0.59,0.38,841,43.5,0.71,air pollution
+Karnataka,Mysuru,0.42,0.22,107,22.6,0.46,deforestation
+Haryana,Gurgaon,0.71,0.36,518,11.5,0.78,water stress
+Madhya Pradesh,Jabalpur,0.38,0.69,317,33.3,0.7,water stress
+Maharashtra,Nashik,0.33,0.34,299,9.6,0.71,flood risk
+Delhi,Dwarka,0.7,0.56,1197,21.3,0.74,flood risk
+Delhi,New Delhi,0.69,0.21,726,12.2,0.44,flood risk
+Delhi,New Delhi,0.77,0.24,78,38.3,0.42,flood risk
+Gujarat,Vadodara,0.44,0.67,60,12.2,0.81,deforestation
+Haryana,Panipat,0.63,0.69,717,8.0,0.45,air pollution
+Maharashtra,Nagpur,0.74,0.64,69,41.4,0.77,water stress
+Madhya Pradesh,Indore,0.7,0.55,763,5.5,0.4,air pollution
+Karnataka,Bengaluru,0.59,0.2,942,29.7,0.71,urban heat
+Kerala,Kochi,0.62,0.57,485,43.9,0.67,deforestation
+Maharashtra,Nagpur,0.75,0.24,1069,6.6,0.49,deforestation
+Bihar,Patna,0.4,0.23,924,21.8,0.5,deforestation
+Haryana,Gurgaon,0.51,0.46,72,35.9,0.83,flood risk
+Odisha,Rourkela,0.62,0.23,761,24.8,0.71,urban heat
+Maharashtra,Pune,0.75,0.54,977,32.7,0.75,urban heat
+West Bengal,Howrah,0.67,0.39,410,42.9,0.46,flood risk
+Gujarat,Ahmedabad,0.72,0.27,156,6.6,0.83,water stress
+West Bengal,Kolkata,0.39,0.5,730,32.6,0.84,air pollution
+Karnataka,Mysuru,0.64,0.38,1076,31.6,0.73,air pollution
+West Bengal,Howrah,0.66,0.65,880,25.8,0.61,water stress
+Odisha,Bhubaneswar,0.8,0.26,617,25.4,0.62,air pollution
+Odisha,Rourkela,0.67,0.4,340,27.3,0.73,deforestation
+Telangana,Karimnagar,0.58,0.69,576,11.7,0.78,urban heat
+Uttar Pradesh,Kanpur,0.75,0.51,931,8.3,0.45,urban heat
+Uttar Pradesh,Lucknow,0.63,0.56,58,16.9,0.54,urban heat
+Bihar,Bhagalpur,0.36,0.63,410,6.3,0.83,deforestation
+Delhi,Dwarka,0.73,0.67,910,13.7,0.47,deforestation
+Maharashtra,Nagpur,0.67,0.39,570,11.2,0.73,water stress
+Delhi,New Delhi,0.71,0.3,273,9.7,0.6,deforestation
+Tamil Nadu,Chennai,0.59,0.25,969,42.6,0.66,flood risk
+Delhi,Rohini,0.57,0.48,218,32.6,0.79,water stress
+Maharashtra,Nashik,0.68,0.23,508,15.5,0.58,urban heat
+West Bengal,Kolkata,0.64,0.58,94,10.6,0.67,water stress
+West Bengal,Durgapur,0.57,0.43,488,34.5,0.48,flood risk
+Telangana,Karimnagar,0.55,0.49,653,27.6,0.61,deforestation
+Punjab,Ludhiana,0.45,0.25,828,29.1,0.41,deforestation
+Punjab,Amritsar,0.76,0.59,258,10.4,0.62,water stress
+Delhi,Rohini,0.53,0.53,1194,15.7,0.41,deforestation
+Odisha,Bhubaneswar,0.33,0.42,603,2.8,0.7,air pollution
+West Bengal,Kolkata,0.45,0.26,868,34.3,0.5,urban heat
+Andhra Pradesh,Vijayawada,0.35,0.69,706,12.3,0.68,air pollution
+Haryana,Panipat,0.57,0.66,1081,27.9,0.5,flood risk
+Bihar,Bhagalpur,0.75,0.21,862,10.4,0.46,flood risk
+Punjab,Ludhiana,0.68,0.44,504,6.9,0.8,water stress
+Telangana,Warangal,0.4,0.5,817,35.1,0.69,flood risk
