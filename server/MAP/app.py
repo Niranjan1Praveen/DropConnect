@@ -4,6 +4,7 @@ import json
 import logging
 import re
 from datetime import datetime
+from model import predict_score
 
 app = Flask(__name__)
 
@@ -148,17 +149,44 @@ def home():
 def analyze():
     try:
         data = request.get_json()
-        lat, lon = float(data['latitude']), float(data['longitude'])
-        
-        if not (8.0 <= lat <= 37.0) or not (68.0 <= lon <= 97.0):
+        lat = float(data["latitude"])
+        lon = float(data["longitude"])
+
+        # India bounds check
+        if not (8.0 <= lat <= 37.0 and 68.0 <= lon <= 97.0):
             return jsonify({"error": "Coordinates outside India"}), 400
-            
+
+        # Step 1: Gemini → feature extraction ONLY
         analysis = get_gemini_analysis(lat, lon)
-        return jsonify(analysis)
-        
+
+        # Enforce required features for ML
+        features = {
+            "vegetation_index": analysis["vegetation_index"],
+            "water_index": analysis["water_index"],
+            "elevation": analysis["elevation"],
+            "urban_proximity": analysis["urban_proximity"]
+        }
+
+        # Step 2: XGBoost → score prediction
+        score = predict_score(features)
+        analysis["score"] = score
+
+        return jsonify(analysis), 200
+
     except Exception as e:
-        logger.error(f"Endpoint error: {str(e)}")
-        return jsonify(generate_smart_fallback(lat, lon)), 200
+        logger.error(f"Analyze endpoint failed: {str(e)}")
+
+        # Fallback → still routed through ML
+        fallback = generate_smart_fallback(lat, lon)
+        fallback_features = {
+            "vegetation_index": fallback["vegetation_index"],
+            "water_index": fallback["water_index"],
+            "elevation": fallback["elevation"],
+            "urban_proximity": fallback["urban_proximity"]
+        }
+        fallback["score"] = predict_score(fallback_features)
+
+        return jsonify(fallback), 200
 
 if __name__ == '__main__':
     app.run(debug=True, port=5003)
