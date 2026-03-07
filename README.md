@@ -1,4 +1,4 @@
-# DropConnect
+# DropConnect - Track Winners in the University - Water Related Disasters Challenge 3 of the Xylem Global Innovation Challenge 2025, standing out among 4000+ teams from across the globe.
 
 **A Smart Platform for Water Resilience Volunteering & CSR Impact** 
 
