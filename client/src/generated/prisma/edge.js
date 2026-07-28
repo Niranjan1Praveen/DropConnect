@@ -264,7 +264,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/vaibhavjain/Desktop/DropConnect/client/src/generated/prisma",
+      "value": "/vercel/sandbox/primary/client/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -273,12 +273,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "rhel-openssl-3.0.x",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/vaibhavjain/Desktop/DropConnect/client/prisma/schema.prisma",
+    "sourceFilePath": "/vercel/sandbox/primary/client/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
