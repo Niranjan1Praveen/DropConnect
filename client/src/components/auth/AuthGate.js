@@ -8,7 +8,8 @@ export default function AuthGate({ mode = "signIn", redirect = "/api/auth/creati
   const { isLoaded, isSignedIn } = useAuth();
 
   if (isLoaded && isSignedIn) {
-    return <a href="/api/auth/creation">{signedInLabel ?? children}</a>;
+    // keeps ?user_type=… so "Register as X" switches the signed-in account to that role
+    return <a href={redirect}>{signedInLabel ?? children}</a>;
   }
   return mode === "signUp" ? (
     <SignUpButton mode="modal" forceRedirectUrl={redirect} signInForceRedirectUrl={redirect}>{children}</SignUpButton>
