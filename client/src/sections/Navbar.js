@@ -5,7 +5,8 @@ import logo from "@/assets/images/logo.png";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
-import { LoginLink } from "@kinde-oss/kinde-auth-nextjs";
+import { useAuth } from "@clerk/nextjs";
+import AuthGate from "@/components/auth/AuthGate";
 import { AuroraText } from "@/components/magicui/aurora-text";
 const navLinks = [
   { label: "Home", href: "" },
@@ -15,6 +16,7 @@ const navLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isSignedIn } = useAuth(); // logged-in visitors see "Dashboard" instead of "Log in"
   return (
     <>
       <section className="py-4 px-4 lg:py-8 flex items-center justify-center fixed w-full top-0 z-100">
@@ -82,14 +84,14 @@ export default function Navbar() {
                     )}
                   ></line>
                 </svg>
-                <LoginLink>
+                <AuthGate>
                   <Button
                     variant={"login"}
                     className="cursor-pointer hidden md:inline-flex items-center"
                   >
-                    Log in
+                    {isSignedIn ? "Dashboard" : "Log in"}
                   </Button>
-                </LoginLink>
+                </AuthGate>
                 <Button
                   variant={"signup"}
                   className="cursor-pointer hidden md:inline-flex items-center"
@@ -112,14 +114,14 @@ export default function Navbar() {
                         {link.label}
                       </a>
                     ))}
-                    <LoginLink>
+                    <AuthGate>
                       <Button
                         variant={"login"}
                         className="cursor-pointer md:inline-flex items-center"
                       >
-                        Log in
+                        {isSignedIn ? "Dashboard" : "Log in"}
                       </Button>
-                    </LoginLink>
+                    </AuthGate>
                     <Button
                       variant={"signup"}
                       className="cursor-pointer md:inline-flex items-center"

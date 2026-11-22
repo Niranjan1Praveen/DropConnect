@@ -1,17 +1,7 @@
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
-import { Button } from "../ui/button";
-// import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+"use client";
+import { SignOutButton } from "@clerk/nextjs";
 
-function AppLogout(props) {
-//   const { getUser } = getKindeServerSession();
-//   const session = await getUser();
-  return (
-    <div>
-      <LogoutLink>
-        Logout
-      </LogoutLink>
-    </div>
-  );
+// Logs the user out of Clerk and sends them back to the landing page
+export default function AppLogout() {
+  return <SignOutButton redirectUrl="/">Logout</SignOutButton>;
 }
-
-export default AppLogout;

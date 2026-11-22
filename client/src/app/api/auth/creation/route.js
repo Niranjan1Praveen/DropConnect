@@ -1,57 +1,20 @@
-import prisma from "@/app/utils/db";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextResponse } from "next/server";
+import { getClerkProfile } from "@/lib/auth/session";
+import { ensureUser } from "@/lib/services/users";
+import { logActivity } from "@/lib/services/activity";
+import { HOME_BY_ROLE } from "@/lib/utils/roles";
 
-export async function GET(request) {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-  const { searchParams } = new URL(request.url);
-  const userType = searchParams.get('user_type');
+// Keep the host the visitor actually used (localhost vs 127.0.0.1 have separate sessions)
+const here = (req, path) => new URL(path, `${req.headers.get("x-forwarded-proto") ?? "http"}://${req.headers.get("host")}`);
 
-  if (!user || user == null || !user.id) {
-    throw new Error("Something went wrong!");
-  }
+// Clerk sends users here after sign-in/up; we sync them into Mongo and route by role
+export async function GET(req) {
+  const profile = await getClerkProfile();
+  if (!profile) return NextResponse.redirect(here(req, "/sign-in"));
 
-  let dbUser = await prisma.user.findUnique({
-    where: {
-      id: user.id,
-    },
-  });
+  const roleHint = new URL(req.url).searchParams.get("user_type");
+  const user = await ensureUser(profile, roleHint);
+  await logActivity(user.id, "login", { role: user.role, via: roleHint ? "register" : "sign-in" });
 
-  if (!dbUser) {
-    dbUser = await prisma.user.create({
-      data: {
-        id: user.id,
-        firstName: user.given_name ?? "",
-        lastName: user.family_name ?? "",
-        email: user.email ?? "",
-        profileImage: user.picture ?? `https://avatar.vercel.sh/${user.given_name}`,
-        role: userType?.toUpperCase() || 'VOLUNTEER',
-      }
-    });
-  }
-
-  let redirectUrl;
-  // switch(userType) {
-  //   case 'organization':
-  //     redirectUrl = 'https://drop-connect-development.vercel.app/dashboard/events';
-  //     break;
-  //   case 'corporate':
-  //     redirectUrl = 'https://dropconnect-csr-dashboard.onrender.com/';
-  //     break;
-  //   default: 
-  //     redirectUrl = 'https://drop-connect-development.vercel.app/dashboard/volunteer/volunteerForm';
-  // }
-  switch(userType) {
-    case 'organization':
-      redirectUrl = 'http://localhost:3000/dashboard/events';
-      break;
-    case 'corporate':
-      redirectUrl = 'http://127.0.0.1:9050/';
-      break;
-    default: 
-      redirectUrl = 'http://localhost:3000/dashboard/volunteer/volunteerForm';
-  }
-
-  return NextResponse.redirect(redirectUrl);
+  return NextResponse.redirect(here(req, HOME_BY_ROLE[user.role] ?? "/"));
 }

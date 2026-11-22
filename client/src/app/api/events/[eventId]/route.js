@@ -1,119 +1,24 @@
-import { NextResponse } from "next/server";
-import prisma from "@/app/utils/db";
+import { route, ok, fail, parse, fromStatus } from "@/lib/api/respond";
 import { eventSchema } from "@/lib/validations/event";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { getEvent, updateEvent, deleteEvent } from "@/lib/services/events";
+import { logActivity } from "@/lib/services/activity";
 
-export async function PUT(req, { params }) {
-  try {
-    const { eventId } = params;
-    const body = await req.json();
+export const GET = route(async (_req, { eventId }) => {
+  const event = await getEvent(eventId);
+  return event ? ok(event) : fail("Event not found", 404);
+});
 
-    const parsed = eventSchema.safeParse(body);
+// Owners can tweak their event; partial updates are fine
+export const PUT = route(async (req, { eventId }, userId) => {
+  const { data, res } = parse(eventSchema.partial(), await req.json());
+  if (res) return res;
+  const result = await updateEvent(eventId, userId, data);
+  if (typeof result === "object") await logActivity(userId, "event.updated", { eventId, fields: Object.keys(data) });
+  return fromStatus(result);
+});
 
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: parsed.error.errors.map((e) => e.message).join(", ") },
-        { status: 400 }
-      );
-    }
-
-    const {
-      eventName,
-      eventDescription,
-      organizerName,
-    } = parsed.data;
-
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-
-    if (!user || !user.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const existingEvent = await prisma.Event.findUnique({
-      where: { id: eventId },
-    });
-
-    if (!existingEvent) {
-      return NextResponse.json({ error: "Event not found" }, { status: 404 });
-    }
-
-    if (existingEvent.userId !== user.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-    }
-
-    const updatedEvent = await prisma.Event.update({
-      where: { id: eventId },
-      data: {
-        eventName,
-        eventDescription: eventDescription || null,
-        organizerName: organizerName || null,
-      },
-    });
-
-    return NextResponse.json(updatedEvent);
-  } catch (error) {
-    console.error("Update Error:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function GET(req, { params }) {
-  try {
-    const { eventId } = params;
-
-    const event = await prisma.Event.findUnique({
-      where: { id: eventId },
-    });
-
-    if (!event) {
-      return NextResponse.json({ error: "Event not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(event);
-  } catch (error) {
-    console.error("Fetch Error:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(
-  req,
-  { params }
-) {
-  try {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-
-    if (!user || !user.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const existingEvent = await prisma.Event.findUnique({
-      where: { id: params.eventId },
-    });
-
-    if (!existingEvent) {
-      return NextResponse.json({ error: "Event not found" }, { status: 404 });
-    }
-
-    if (existingEvent.userId !== user.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-    }
-
-    await prisma.Event.delete({
-      where: { id: params.eventId },
-    });
-
-    return NextResponse.json({ message: "Event deleted successfully" });
-  } catch (error) {
-    console.error("DELETE Error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-  }
-}
+export const DELETE = route(async (_req, { eventId }, userId) => {
+  const result = await deleteEvent(eventId, userId);
+  if (typeof result === "object") await logActivity(userId, "event.deleted", { eventId });
+  return fromStatus(result);
+});

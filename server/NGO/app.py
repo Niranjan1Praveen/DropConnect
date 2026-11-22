@@ -2,6 +2,9 @@ import pandas as pd
 import plotly.graph_objs as go
 from dash import Dash, dcc, html
 from flask import Flask
+from pathlib import Path
+
+DATA = Path(__file__).parent / "data"  
 
 # Flask server
 server = Flask(__name__)
@@ -11,11 +14,11 @@ app = Dash(__name__, server=server, use_pages=False, suppress_callback_exception
 app.title = "NGO Impact Assessment Dashboard"
 
 # Load datasets (same as CSR)
-trionyx = pd.read_csv("data/TrionyxSystemsWorldwide.csv")
-zentara = pd.read_csv("data/ZentaraDynamicsCorporation.csv")
-aurevia = pd.read_csv("data/AureviaInternationalHoldings.csv")
-noventra = pd.read_csv("data/NoventraTechnologiesInc.csv")
-veltrix = pd.read_csv("data/VeltrixGlobalSolutions.csv")
+trionyx = pd.read_csv(DATA / "TrionyxSystemsWorldwide.csv")
+zentara = pd.read_csv(DATA / "ZentaraDynamicsCorporation.csv")
+aurevia = pd.read_csv(DATA / "AureviaInternationalHoldings.csv")
+noventra = pd.read_csv(DATA / "NoventraTechnologiesInc.csv")
+veltrix = pd.read_csv(DATA / "VeltrixGlobalSolutions.csv")
 
 def kpi_summary(label, value, unit=""):
     return html.Div([
@@ -161,4 +164,4 @@ app.layout = html.Div([
 ])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8050)

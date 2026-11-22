@@ -27,6 +27,9 @@ planning only, and are not an emergency warning service.
 from __future__ import annotations
 
 import logging
+import threading
+
+import joblib
 from pathlib import Path
 
 import numpy as np
@@ -230,10 +233,19 @@ def train_model(path: Path | str = DATA_PATH) -> Pipeline:
     return pipeline
 
 
+_LOCK = threading.Lock()
+MODEL_FILE = Path(__file__).resolve().parent / "risk_model.joblib"
+
+
 def get_model() -> Pipeline:
+    """Load the cached model from disk, training (once) only if it's missing."""
     global _MODEL
-    if _MODEL is None:
-        return train_model()
+    with _LOCK:  # concurrent first requests must not each train a model
+        if _MODEL is None:
+            if MODEL_FILE.exists() and MODEL_FILE.stat().st_mtime > Path(DATA_PATH).stat().st_mtime:
+                _MODEL = joblib.load(MODEL_FILE)
+            else:
+                joblib.dump(train_model(), MODEL_FILE)
     return _MODEL
 
 
@@ -293,6 +305,41 @@ def predict_risk(features: dict) -> dict:
         # Higher is better: 1.0 means an unambiguously low-risk location.
         "score": round(float(np.clip(1.0 - expected_severity, 0.0, 1.0)), 3),
     }
+
+
+def predict_batch(rows: list[dict]) -> list[dict]:
+    """Score many locations in one go (used for the nationwide zone layer)."""
+    df = pd.DataFrame(rows)
+    X = engineer_features(df)[_feature_columns()]
+    proba = get_model().predict_proba(X)
+    return [{"risk_level": RISK_CLASSES[int(np.argmax(p))],
+             "risk_confidence": round(float(p.max()), 3),
+             "risk_probabilities": {c: round(float(v), 3) for c, v in zip(RISK_CLASSES, p)}}
+            for p in proba]
+
+
+def top_drivers(features: dict, k: int = 5) -> list[dict]:
+    """Which inputs pushed this prediction towards its class (XGBoost SHAP values).
+
+    Positive impact = pushed towards the predicted risk level, negative = away.
+    """
+    import xgboost as xgb
+
+    model = get_model()
+    prep, clf = model.named_steps["preprocess"], model.named_steps["classifier"]
+    X = _prepare_request(features)
+    Xt = prep.transform(X)
+    Xt = Xt.toarray() if hasattr(Xt, "toarray") else Xt
+    cls = int(np.argmax(model.predict_proba(X)[0]))
+
+    # contribs shape: (rows, classes, features + bias); keep the predicted class, drop bias
+    contribs = clf.get_booster().predict(xgb.DMatrix(Xt), pred_contribs=True)[0][cls][:-1]
+    names = [n.split("__", 1)[-1] for n in prep.get_feature_names_out()]
+    order = np.argsort(-np.abs(contribs))[:k]
+    raw = X.iloc[0]
+    return [{"feature": names[i], "impact": round(float(contribs[i]), 3),
+             "value": (round(float(raw[names[i]]), 2) if names[i] in raw and np.isscalar(raw[names[i]])
+                       and not isinstance(raw[names[i]], str) else None)} for i in order]
 
 
 def predict_score(features: dict) -> float:

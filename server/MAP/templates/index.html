@@ -124,6 +124,33 @@
     // Initialize map centered on India
     const map = L.map('map').setView([22.0, 78.0], 5);
     const analyzedLocations = new L.FeatureGroup().addTo(map);
+
+    // Nationwide ML risk zones: one coloured pointer per grid cell across India
+    const riskZones = new L.FeatureGroup().addTo(map);
+    fetch("zones").then(r => r.json()).then(({ points, season }) => {
+      points.forEach(p => {
+        const color = RISK_COLORS[p.risk_level];
+        L.circleMarker([p.lat, p.lon], {
+          radius: 7, color: "#fff", weight: 1, fillColor: color, fillOpacity: 0.85
+        }).bindPopup(`
+          <div class="popup-header"><h3 style="margin:0;font-size:15px">${p.region} India</h3>
+            <div class="score-badge" style="background:${color}">${p.risk_level}</div></div>
+          <div style="font-size:12px;color:#666">${season} estimate · ${p.lat}, ${p.lon} · ML confidence ${(p.risk_confidence * 100).toFixed(0)}%</div>
+          <div style="margin:8px 0">${probBars(p.risk_probabilities)}</div>
+          <button onclick="explainZone(${p.lat}, ${p.lon})" style="width:100%;padding:6px;border:0;border-radius:4px;background:#4f46e5;color:#fff;cursor:pointer">
+            Analyse in detail + Gemini explanation</button>`).addTo(riskZones);
+      });
+      // Little summary of how many zones fall in each class
+      const counts = points.reduce((a, p) => (a[p.risk_level] = (a[p.risk_level] || 0) + 1, a), {});
+      document.getElementById("zone-counts").innerHTML = Object.keys(RISK_COLORS)
+        .map(k => `<span style='background:${RISK_COLORS[k]}'></span> ${k} <b>${counts[k] || 0}</b>`).join("<br>");
+    }).catch(err => console.error("Zone layer failed:", err));
+
+    // Run the full analysis (live features + drivers + Gemini) for a zone's point
+    window.explainZone = (lat, lon) => {
+      map.closePopup();
+      map.fire("click", { latlng: L.latLng(lat, lon) });
+    };
     let adminLayer;
 
     // 1. Enhanced Base Maps (3 options now)
@@ -142,8 +169,8 @@
 
     // Load GeoJSON boundaries
     Promise.all([
-      fetch("/static/india-composite.geojson").then(r => r.json()),
-      fetch("/static/india-admin.geojson").then(r => r.json())
+      fetch("static/india-composite.geojson").then(r => r.json()),
+      fetch("static/india-admin.geojson").then(r => r.json())
     ]).then(([boundary, admin]) => {
       // Add boundary layer
       L.geoJSON(boundary, { 
@@ -168,6 +195,7 @@
       // Add layer control
       L.control.layers(baseLayers, {
         "State Boundaries": adminLayer,
+        "ML Risk Zones": riskZones,
         "Analyzed Locations": analyzedLocations
       }, {collapsed: false}).addTo(map);
     }).catch(err => {
@@ -189,7 +217,7 @@
       spinner.addTo(map);
 
       // Check if point is in India
-      fetch("/static/india-composite.geojson")
+      fetch("static/india-composite.geojson")
         .then(r => r.json())
         .then(indiaBoundary => {
           const inside = turf.booleanPointInPolygon(point, indiaBoundary.features[0]);
@@ -198,7 +226,7 @@
             throw new Error("Clicked outside India");
           }
           
-          return fetch("/analyze", {
+          return fetch("analyze", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -237,58 +265,60 @@
         .finally(() => map.removeControl(spinner));
     });
 
-    function addAnalysisResult(latlng, data, regionName) {
-      // Determine color based on score
-      let color;
-      if (data.score >= 0.75) color = "#2ecc71"; // green
-      else if (data.score >= 0.5) color = "#f39c12"; // orange
-      else color = "#e74c3c"; // red
+    // Colour per ML risk class (Low -> Severe)
+    const RISK_COLORS = { Low: "#2ecc71", Moderate: "#f1c40f", High: "#e67e22", Severe: "#e74c3c" };
+    const pretty = (f) => f.replace(/_/g, " ").replace(" mm", "").replace(" percent", " %");
 
-      // Create circle marker
-      const circle = L.circle(latlng, {
-        color: color,
-        fillColor: color,
-        fillOpacity: 0.3,
-        radius: 10000,  // 10km radius
-        weight: 2
-      });
-      
-      // 3. Enhanced Popup Content
+    // Tiny horizontal bar for each class probability
+    const probBars = (p) => Object.entries(p).map(([k, v]) => `
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;margin:2px 0">
+        <span style="width:62px">${k}</span>
+        <div style="flex:1;background:#eee;border-radius:3px;height:8px">
+          <div style="width:${(v * 100).toFixed(0)}%;background:${RISK_COLORS[k]};height:8px;border-radius:3px"></div>
+        </div>
+        <span style="width:34px;text-align:right">${(v * 100).toFixed(0)}%</span>
+      </div>`).join("");
+
+    // Top model drivers: red arrow = raised the risk, green = lowered it
+    const driverList = (d) => (d || []).map((x) => `
+      <li style="font-size:12px">${x.impact > 0 ? "🔺" : "🔻"} ${pretty(x.feature)}${x.value !== null ? ` <b>${x.value}</b>` : ""}</li>`).join("");
+
+    // Ask the server to turn this prediction into a PDF stored in MongoDB
+    window.saveReport = async (id, btn) => {
+      btn.disabled = true; btn.textContent = "Saving...";
+      // Inside the website we go through Next so the PDF is tagged with the logged-in user
+      const url = location.pathname.startsWith("/map-app") ? `/api/map/report/${id}` : `report/${id}`;
+      const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+      btn.textContent = r.ok ? "Saved to Reports ✓" : "Save failed";
+    };
+
+    function addAnalysisResult(latlng, data, regionName) {
+      const color = RISK_COLORS[data.risk_level] || "#888";
+      const circle = L.circle(latlng, { color, fillColor: color, fillOpacity: 0.3, radius: 10000, weight: 2 });
+
       const popupContent = `
         <div class="popup-header">
           <h3 style="margin:0;font-size:16px;">${regionName}</h3>
-          <div class="score-badge" style="background:${color}">${data.score.toFixed(2)}</div>
+          <div class="score-badge" style="background:${color}">${data.risk_level} risk</div>
         </div>
+        <div style="font-size:12px;color:#666">ML confidence ${(data.risk_confidence * 100).toFixed(0)}% · ${data.region || ""} · ${data.season || ""}</div>
+        <div style="margin:8px 0">${probBars(data.risk_probabilities)}</div>
         <div class="metrics-grid">
-          <div class="metric">
-            <span class="metric-label">Vegetation</span>
-            <span class="metric-value">${data.vegetation_index.toFixed(2)}</span>
-          </div>
-          <div class="metric">
-            <span class="metric-label">Water</span>
-            <span class="metric-value">${data.water_index.toFixed(2)}</span>
-          </div>
-          <div class="metric">
-            <span class="metric-label">Elevation</span>
-            <span class="metric-value">${data.elevation}m</span>
-          </div>
-          <div class="metric">
-            <span class="metric-label">Urban</span>
-            <span class="metric-value">${data.urban_proximity.toFixed(1)}km</span>
-          </div>
+          <div class="metric"><span class="metric-label">Suitability</span><span class="metric-value">${data.score.toFixed(2)}</span></div>
+          <div class="metric"><span class="metric-label">Elevation</span><span class="metric-value">${data.elevation}m</span></div>
+          <div class="metric"><span class="metric-label">Vegetation</span><span class="metric-value">${data.vegetation_index.toFixed(2)}</span></div>
+          <div class="metric"><span class="metric-label">Water</span><span class="metric-value">${data.water_index.toFixed(2)}</span></div>
         </div>
+        ${data.drivers && data.drivers.length ? `<b style="font-size:13px">What drove this prediction</b><ul style="margin:4px 0 0 0;padding-left:16px">${driverList(data.drivers)}</ul>` : ""}
         <div class="recommendation-box" style="border-left-color:${color}">
-          <p style="margin:0;">${data.recommendation}</p>
-          ${data.issues && data.issues.length ? `
-            <div class="issues">
-              <strong>Note:</strong> ${data.issues.join(', ')}
-            </div>
-          ` : ''}
+          <b style="font-size:12px">Why? ${data.explanation_source === "gemini" ? "(explained by Gemini)" : ""}</b>
+          <p style="margin:4px 0 0 0;">${data.explanation || data.recommendation}</p>
+          ${data.issues && data.issues.length ? `<div class="issues"><strong>Local concerns:</strong> ${data.issues.join(", ")}</div>` : ""}
         </div>
+        ${data.result_id ? `<button onclick="saveReport('${data.result_id}', this)" style="margin-top:8px;width:100%;padding:6px;border:0;border-radius:4px;background:#4f46e5;color:#fff;cursor:pointer">Save as PDF report</button>` : ""}
       `;
-      
-      // Bind popup and add to map
-      circle.bindPopup(popupContent).openPopup();
+
+      circle.bindPopup(popupContent, { maxWidth: 340 }).openPopup();
       analyzedLocations.addLayer(circle);
     }
 
@@ -297,10 +327,11 @@
     legend.onAdd = function() {
       const div = L.DomUtil.create("div", "legend");
       div.innerHTML = `
-        <b>Suitability Score</b><br>
-        <span style='background:#2ecc71'></span> High (≥ 0.75)<br>
-        <span style='background:#f39c12'></span> Medium (0.5–0.75)<br>
-        <span style='background:#e74c3c'></span> Low (< 0.5)
+        <b>ML Risk Zones</b><br><div id='zone-counts'>
+        <span style='background:#2ecc71'></span> Low<br>
+        <span style='background:#f1c40f'></span> Moderate<br>
+        <span style='background:#e67e22'></span> High<br>
+        <span style='background:#e74c3c'></span> Severe</div><small>Click a dot for details</small>
       `;
       return div;
     };

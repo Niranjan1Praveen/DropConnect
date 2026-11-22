@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Button } from "./button";
-import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import AuthGate from "@/components/auth/AuthGate";
 import { Card } from "./card";
 
 const DropCard = ({ item }) => {
@@ -46,11 +46,11 @@ const DropCard = ({ item }) => {
         <p className="font-medium text-xl px-2 leading-normal">
           {item.description}
         </p>
-        <RegisterLink postLoginRedirectURL={url}>
+        <AuthGate mode="signUp" redirect={url}>
           <Button className="cursor-pointer w-full" variant={"outline"}>
             {text}
           </Button>
-        </RegisterLink>
+        </AuthGate>
         <ul className="text-md text-white/80 mt-4 space-y-2">
           {item.features?.map((point, i) => (
             <li key={i} className="flex gap-2 text-[1.1rem]">

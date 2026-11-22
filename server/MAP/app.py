@@ -5,7 +5,12 @@ import logging
 import os
 import re
 from datetime import datetime
-from model import RISK_CLASSES, predict_risk, NUMERIC_FEATURES, CATEGORICAL_FEATURES
+from pathlib import Path
+from dotenv import load_dotenv
+from model import RISK_CLASSES, predict_risk, top_drivers, NUMERIC_FEATURES, CATEGORICAL_FEATURES
+from explain import explain
+import storage
+import geo_features
 
 app = Flask(__name__)
 
@@ -16,11 +21,16 @@ logger = logging.getLogger(__name__)
 # Read the key from the environment so no credential is ever committed. With no
 # key configured the endpoint still answers: every request simply takes the
 # coordinate-derived path below instead of asking Gemini.
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")  # server/.env
+
+# Several keys may be listed (comma separated); we use the first one that's set
+GEMINI_KEYS = [k.strip() for k in os.environ.get("GEMINI_API_KEYS", os.environ.get("GEMINI_API_KEY", "")).split(",") if k.strip()]
+GEMINI_API_KEY = GEMINI_KEYS[0] if GEMINI_KEYS else ""
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL") or "gemini-1.5-flash"
 gemini_model = None
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
-    gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+    gemini_model = genai.GenerativeModel(GEMINI_MODEL)
 else:
     logger.warning("GEMINI_API_KEY not set; /analyze will derive features from coordinates.")
 
@@ -165,31 +175,8 @@ def derive_features_from_coordinates(lat, lon):
     seasonal = {"Monsoon": 1.75, "Post-Monsoon": 0.85,
                 "Pre-Monsoon": 0.45, "Winter": 0.30}[season]
 
-    elevation = max(5.0, 60.0 + abs(lat - 20.0) * 22.0)
-    rain_24 = 30.0 * monsoon * seasonal
-    rain_72 = rain_24 * 2.1 + 15.0 * seasonal
-    rain_7d = rain_72 * 1.7 + 25.0 * seasonal
-
-    features = {
-        "latitude": lat,
-        "longitude": lon,
-        "region": region,
-        "season": season,
-        "elevation": elevation,
-        "slope_degrees": max(0.5, 2.0 + elevation / 900.0),
-        "vegetation_index": max(0.05, min(0.95, 0.60 - (lat - 20.0) * 0.015)),
-        "water_index": max(0.05, min(0.95, 0.45 + (lon - 78.0) * 0.01)),
-        "urban_proximity": max(1.0, 20.0 + abs(lon - 77.0)),
-        "rainfall_24h_mm": rain_24,
-        "rainfall_72h_mm": rain_72,
-        "rainfall_7d_mm": rain_7d,
-        "soil_moisture_percent": max(5.0, min(100.0, 28.0 + 0.055 * rain_7d)),
-        "river_level_m": max(0.1, 1.4 + 0.0075 * rain_72 + 0.9 * monsoon),
-        "distance_to_river_km": 8.0,
-        "drainage_capacity": 0.5,
-        "historical_flood_frequency": round(0.4 + 2.6 * monsoon),
-        "population_density": 800.0,
-    }
+    # Geography-aware estimate (river basins, deltas, deserts, plateaus)
+    features = geo_features.derive(lat, lon, region, season, monsoon, seasonal)
     return features, ["derived from coordinates"]
 
 
@@ -215,7 +202,7 @@ def analyze():
     # Step 1: gather the descriptive inputs.
     try:
         features, issues = get_gemini_features(lat, lon)
-        sources = ["Gemini 1.5 Flash environmental description"]
+        sources = [f"{GEMINI_MODEL} environmental description"]
     except Exception as e:
         logger.warning(f"Falling back to coordinate-derived features: {e}")
         features, issues = derive_features_from_coordinates(lat, lon)
@@ -243,7 +230,58 @@ def analyze():
         "recommendation": RISK_GUIDANCE[prediction["risk_level"]],
         "sources": sources + ["DropConnect MAP risk classifier (screening only)"],
     }
+    # Step 3: why did the model decide this? SHAP drivers + a Gemini explanation
+    try:
+        drivers = top_drivers(features)
+    except Exception as e:
+        logger.warning(f"Driver extraction failed: {e}")
+        drivers = []
+    response["drivers"] = drivers
+    response["explanation"], response["explanation_source"] = explain(gemini_model, prediction, drivers, features)
+    response["region"], response["season"] = features["region"], features["season"]
+
+    # Keep every prediction in Mongo so NGOs can turn it into a PDF later
+    response["result_id"] = storage.save_result(dict(response), lat, lon)
     return jsonify(response), 200
+
+
+@app.route('/report/<result_id>', methods=['POST'])
+def report(result_id):
+    """Render a saved prediction as a PDF and store it in Mongo GridFS."""
+    try:
+        owner = (request.get_json(silent=True) or {}).get("ownerId")
+        report_id = storage.store_pdf(result_id, owner)
+    except Exception as e:
+        logger.error(f"PDF report failed: {e}")
+        return jsonify({"error": "Could not create report"}), 500
+    if not report_id:
+        return jsonify({"error": "Result not found"}), 404
+    return jsonify({"report_id": report_id}), 201
+
+
+@app.route('/zones', methods=['GET'])
+def zones():
+    """Risk level for a grid of points across India (feeds the coloured zone layer)."""
+    from zones import risk_zones
+    try:
+        return jsonify({"season": "Dataset", "points": risk_zones()}), 200
+    except Exception as e:
+        logger.error(f"Zone scoring failed: {e}")
+        return jsonify({"error": "Could not compute zones"}), 500
+
+
+@app.route('/heatmap.png', methods=['GET'])
+def heatmap():
+    """Smooth green-to-red risk surface clipped to India (Leaflet image overlay)."""
+    from heatmap import heatmap_png, BOUNDS
+    try:
+        resp = app.response_class(heatmap_png(), mimetype="image/png")
+        resp.headers["X-Bounds"] = ",".join(map(str, BOUNDS))
+        resp.headers["Cache-Control"] = "public, max-age=3600"
+        return resp
+    except Exception as e:
+        logger.error(f"Heatmap failed: {e}")
+        return jsonify({"error": "Could not build heatmap"}), 500
 
 
 @app.route('/health', methods=['GET'])
@@ -252,4 +290,9 @@ def health():
 
 
 if __name__ == '__main__':
+    import threading
+    from zones import risk_zones
+    # Warm up in the background: load/train the model and pre-score the zone grid
+    from heatmap import heatmap_png
+    threading.Thread(target=lambda: (risk_zones(), heatmap_png()), daemon=True).start()
     app.run(debug=True, port=5003)
