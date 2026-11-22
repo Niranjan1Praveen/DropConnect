@@ -1,0 +1,4 @@
+.env*
+DEMO_ACCOUNTS.local.md
+.next
+node_modules
