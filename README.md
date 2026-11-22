@@ -58,16 +58,18 @@
 
 ## Tech Stack
 
-| Layer             | Technology                              |
-|------------------|------------------------------------------|
-| Frontend         | React.js, Tailwind CSS                   |
-| Backend Services | Supabase (Backend-as-a-Service)          |
-| ORM & DB Layer   | Prisma ORM with PostgreSQL (via Supabase)|
-| Authentication   | Supabase Auth (OAuth + Magic Links)      |
-| Hosting          | Supabase Hosting                         |
-| Realtime & APIs  | Supabase Realtime, Edge Functions        |
-| Deployment       | GitHub Actions (CI/CD)                   |
-| ML Models        | XGBoost for Disaster Zone Classification |
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 15 (App Router), React 19, Tailwind CSS 4, shadcn/ui, Framer Motion (dark mode only) |
+| Backend / API | Next.js Route Handlers (Node.js), modular `lib/` services |
+| Authentication | Clerk 7 (Google + email sign-in, role-based dashboards) |
+| Database | MongoDB Atlas (native driver): users, events, volunteers, inbox, activity log, CSR activities, ML results |
+| File storage | MongoDB GridFS (PDF reports), pdf-lib for generated reports |
+| Maps & charts | Leaflet / React-Leaflet (risk heatmap), Recharts (CSR and NGO impact dashboards) |
+| Machine learning | XGBoost risk classifier, scikit-learn pipeline, SHAP drivers (Python, `server/MAP`) |
+| AI explanations | Google Gemini API (plain-language reasons for each risk prediction) |
+| Research | Jupyter notebook: EDA → feature engineering → model comparison |
+| Hosting | Vercel (Next.js app); ML map data baked to static files at build time |
 
 
 ---
