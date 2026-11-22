@@ -77,11 +77,11 @@ export default function Hero() {
         <div className="flex mt-8 md:max-w-lg mx-auto items-center justify-center gap-5">
           <RainbowButton
             variant={"outline"}
-            className="rounded-full text-black p-5"
+            className="rounded-full text-white p-5"
           >
             Read Docs
           </RainbowButton>
-          <RainbowButton className="text-white rounded-full p-5">
+          <RainbowButton className="text-black rounded-full p-5">
             <a href="#pricing">Get Started Now</a>
           </RainbowButton>
         </div>
